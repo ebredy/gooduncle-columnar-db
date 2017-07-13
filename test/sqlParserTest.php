@@ -132,25 +132,25 @@ class sqlParserTest extends TestCase{
         
         
         $this->assertEquals(true,$this->sqlParser->parseCreateTable("create table tableA(first_name varchar(27),last_name varchar(27),age int);"));
-        $this->assertEquals(true,$this->sqlParser->parse("create table tableA(first_name varchar(27),last_name varchar(27),age int);"));
+        $this->assertEquals(true,$this->sqlParser->parse("create table tableA(first_name varchar(27),last_name varchar(27),age int(3));"));
         $this->assertEquals('tableA',$this->sqlParser->getEntityName());
         $this->assertEquals('table',$this->sqlParser->getEntity());
         $this->assertEquals([
-                                0=>'first_name varchar(27)',
-                                1=>'last_name varchar(27)',
-                                2=>'age int'
+                                0=>['name'=>'first_name','datatype'=>'varchar','length'=>27],
+                                1=>['name'=>'last_name','datatype'=>'varchar','length'=>27],
+                                2=>['name'=>'age','datatype'=>'int','length'=>3]
             
         ],$this->sqlParser->getFields());
         $this->assertEquals('create',$this->sqlParser->getAction());
         $this->assertEquals([],$this->sqlParser->getFilters());
 
-        $this->assertEquals(true,$this->sqlParser->parse("create table tableA(first_name varchar(27),last_name varchar(27),age int);"));
+        $this->assertEquals(true,$this->sqlParser->parse("create table tableA(first_name varchar(27),last_name varchar(27),age int(3));"));
         $this->assertEquals('tableA',$this->sqlParser->getEntityName());
         $this->assertEquals('table',$this->sqlParser->getEntity());
         $this->assertEquals([
-                                0=>'first_name varchar(27)',
-                                1=>'last_name varchar(27)',
-                                2=>'age int'
+                                0=>['name'=>'first_name','datatype'=>'varchar','length'=>27],
+                                1=>['name'=>'last_name','datatype'=>'varchar','length'=>27],
+                                2=>['name'=>'age','datatype'=>'int','length'=>3]
             
         ],$this->sqlParser->getFields());
         $this->assertEquals('create',$this->sqlParser->getAction());
@@ -169,6 +169,8 @@ class sqlParserTest extends TestCase{
         
         $this->assertEquals(true,$this->sqlParser->parseUseDatabase("use erwin;"));
         $this->assertEquals(true,$this->sqlParser->parse("use erwin;"));
+        $this->assertEquals('database',$this->sqlParser->getEntity());
+        $this->assertEquals('select',$this->sqlParser->getAction());        
         $this->assertEquals(false,$this->sqlParser->parseCreateTable("create tabletableA(first_name varchar(27),last_name varchar(27),age int);"));
 
         

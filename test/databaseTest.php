@@ -7,7 +7,7 @@
  */
 
 use PHPUnit\Framework\TestCase;
-use ColumnarDB\parser\sqlParser;
+use ColumnarDB\db\entities\database;
 
 class databaseTest extends TestCase{
     //put your code here
@@ -20,11 +20,11 @@ class databaseTest extends TestCase{
     /**
      * @covers database::list
      */
-    public function testlist(){
+    public function testShow(){
         
         
-        $this->assertEquals([0=>'testDatabase'],$this->database->list());
-        $this->assertEquals(false,$this->database->list());
+        $this->assertEquals([0=>'testDatabase'],$this->database->show());
+        $this->assertEquals(false,$this->database->show());
 
         
         

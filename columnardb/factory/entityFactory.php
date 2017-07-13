@@ -17,7 +17,7 @@ class entityFactory implements entityInterface {
    
     
     private static $_entityIstance = [];
-
+    public $output =  null;
 
     public static function getInstance()
     {

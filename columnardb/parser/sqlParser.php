@@ -109,7 +109,7 @@ class sqlParser {
             $this->regexToVariableMapper([
                 
                 'entity'=> 'tables',
-                'action'=> 'list'
+                'action'=> 'show'
                     
             ]);
             
@@ -231,7 +231,7 @@ class sqlParser {
                 'entity'     => 'table',
                 'action'     => 'create',
                 'entityName' => $this->_regexMatches[1],
-                'fields'     => explode( ",", $this->_regexMatches[2] ),
+                'fields'     => $this->parseVariableAttributes( explode( ",", $this->_regexMatches[2] ) ),
             
             ]);
             
@@ -249,7 +249,7 @@ class sqlParser {
             $this->regexToVariableMapper([
                 
                 'entity'=> 'database',
-                'action'=> 'list'
+                'action'=> 'show'
                     
             ]);
             
@@ -267,7 +267,7 @@ class sqlParser {
             $this->regexToVariableMapper([
 
                 'entity'     => 'database',
-                'action'     => 'use',
+                'action'     => 'select',
                 'entityName' =>  isset( $this->_regexMatches[1] )? $this->_regexMatches[1] : null
 
             ]);
@@ -325,13 +325,33 @@ class sqlParser {
              
              for( $x=0; $x < $total; $x++){
                  
-                 $fieldsToValues[$fields[$x]] = $this->removeDoubleSingleQuotes( $values[$x] );
+                 $fieldsToValues[$fields[$x]] =  $this->removeDoubleSingleQuotes(  $values[$x] );
              }
          }
          
          return $fieldsToValues;
      }
      
+     protected function parseVariableAttributes( $variables ){
+        
+         $variableRegex = [];
+         $columns = [];
+         foreach( $variables as $key => $variable ){
+             
+            if( preg_match('/\s*(.*?)\s+(int|varchar)\(([0-9]{1,999})\)/i', $variable, $variableRegex ) ){
+
+             $columns[] = 
+                [
+                           'name'      => $variableRegex[1],
+                           'datatype'  => $variableRegex[2],
+                           'length'    => $variableRegex[3]
+                ];
+            }
+            $variableRegex = [];
+         }
+         
+         return $columns;
+     }
      function removeDoubleSingleQuotes( $string ){
          
          return preg_replace("/[^a-zA-Z0-9]+/", "", html_entity_decode( $string, ENT_QUOTES ) );
